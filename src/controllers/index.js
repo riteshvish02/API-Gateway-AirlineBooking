@@ -1,3 +1,4 @@
 module.exports = {
-    infocontroller:require("./home-controller")
+    infocontroller:require("./home-controller"),
+    userController:require("./user-controller")
 }
