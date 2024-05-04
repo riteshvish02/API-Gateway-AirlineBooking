@@ -36,7 +36,7 @@ async function signin(data) {
         throw new AppError("invalid password",StatusCodes.UNAUTHORIZED)
     }
 
-    const jwt = Auth.createToken({password:user.password,email:user.email})
+    const jwt = Auth.createToken({id:user.id,email:user.email})
     return jwt
   } catch (error) {
     if(error instanceof AppError) throw error;
@@ -44,7 +44,27 @@ async function signin(data) {
   }
 }
 
+async function isAuthenticated(token){
+    try {
+        if(!token){
+            throw new AppError("token not found",StatusCodes.UNAUTHORIZED)
+        }
+        const response = Auth.verifyjwt(token)
+        const user = await usercreateRepo.get(response.id)
+        if(!user){
+            throw new AppError("user not found",StatusCodes.NOT_FOUND)
+        }
+        return user.id
+    } catch (error) {
+        if(error instanceof AppError) throw error;
+        if(error.name === 'jsonWebTokenError'){
+            throw new AppError("invalid token",StatusCodes.UNAUTHORIZED)
+        }
+    }
+}
+
 module.exports = {
     Createuser,
-    signin
+    signin,
+    isAuthenticated
 }

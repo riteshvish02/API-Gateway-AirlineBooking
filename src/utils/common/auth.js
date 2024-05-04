@@ -19,8 +19,17 @@ function createToken(input){
     throw error
    }
 }
+function verifyjwt(token){
+    try {
+    const response = jwt.verify(token,serverconfig.JWT_SECRET)
+    return response
+    } catch (error) {
+        throw error
+    }
+}
 
 module.exports = {
     checkPassword,
-    createToken
+    createToken,
+    verifyjwt
 }
