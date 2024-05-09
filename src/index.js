@@ -1,6 +1,21 @@
 const express = require('express');
 const app = express();
 const {serverconfig,Logger} = require("./config")
+//proxysetup
+const { createProxyMiddleware } = require('http-proxy-middleware');
+app.use('/flightsService', createProxyMiddleware({ 
+    target:serverconfig.FLIGHT_SERVER, 
+    changeOrigin: true, 
+    pathRewrite: {'^/flightsService' : '/'} 
+}));
+
+app.use('/bookingsService', createProxyMiddleware({ 
+    target:serverconfig.BOOKING_SERVER, 
+    changeOrigin: true, 
+    pathRewrite: {'^/bookingsService' : '/'} 
+}));
+
+
 //rate limiter
 const rateLimit  = require('express-rate-limit');  
 
