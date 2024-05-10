@@ -3,11 +3,17 @@ const {userRepo} = require("../repositories")
 const bcrypt = require('bcrypt')
 const AppError = require("../utils/errors/app-error")
 const {Auth} = require("../utils/common")
+const {RoleRepo} = require("../repositories")
 const usercreateRepo = new userRepo()
-
+const roleRepo = new RoleRepo()
+const {ENUMS} = require("../utils/common")
+const {ADMIN,CUSTOMER,FLIGHT_COMPANY} = ENUMS.Roles
 async function Createuser(data){
     try {
         const user = await usercreateRepo.create(data) 
+        const role = await roleRepo.getRoleByname(CUSTOMER)
+        console.log(role);
+        user.addRole(role)
         return user
     } catch (error) {
         // console.log(error.name);
