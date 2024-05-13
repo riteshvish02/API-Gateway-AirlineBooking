@@ -12,7 +12,7 @@ async function Createuser(data){
     try {
         const user = await usercreateRepo.create(data) 
         const role = await roleRepo.getRoleByname(CUSTOMER)
-        console.log(role);
+        // console.log(role);
         user.addRole(role)
         return user
     } catch (error) {
@@ -69,8 +69,45 @@ async function isAuthenticated(token){
     }
 }
 
+async function addRoletouser(data){
+    try {
+        const user = await usercreateRepo.get(data.id)
+        if(!user){
+            throw new AppError("user not found for the given id ",StatusCodes.NOT_FOUND)
+        }
+        const role = await roleRepo.getRoleByname(data.role)
+        if(!role){
+            throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
+        }
+        user.addRole(role)
+        return user
+    } catch (error) {
+        if(error instanceof AppError) throw error;
+        throw new AppError('something went wrong', StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+}
+async function isAdmin(id){
+    try {
+        const user = await usercreateRepo.get(id)
+        if(!user){
+            throw new AppError("user not found for the given id ",StatusCodes.NOT_FOUND)
+        }
+        const adminrole = await roleRepo.getRoleByname(ADMIN)
+        if(!adminrole){
+            throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
+        }
+        user.hasRole(adminrole)
+        return true
+    } catch (error) {
+        console.log(error);
+        if(error instanceof AppError) throw error;
+        throw new AppError('something went wrong', StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+}
 module.exports = {
     Createuser,
     signin,
-    isAuthenticated
+    isAuthenticated,
+    addRoletouser,
+    isAdmin
 }

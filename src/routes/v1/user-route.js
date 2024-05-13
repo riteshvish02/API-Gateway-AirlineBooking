@@ -12,6 +12,12 @@ router.post('/signin',
 Authrequestmiddleware.validateAuthrequest,
 userController.signin
 )
+router.post('/role',
+Authrequestmiddleware.checkAuth,
+Authrequestmiddleware.isAdmin,
+userController.addrole
+)
+
 
 
 module.exports = router

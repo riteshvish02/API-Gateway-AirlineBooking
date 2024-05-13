@@ -8,7 +8,6 @@ function checkPassword(plainpassword,encryptedpassword) {
         console.log(error);
         throw error;
     }
-
 }
 
 function createToken(input){

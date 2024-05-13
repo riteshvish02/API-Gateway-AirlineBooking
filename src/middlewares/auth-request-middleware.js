@@ -28,6 +28,7 @@ async function checkAuth(req, res, next) {
             next() //setting user id in the request object
         }
     } catch (error) {
+        console.log(error);
         ErrorResponse.message = "something went wrong"
         ErrorResponse.error =  new AppError(["jwt is not found in the incoming request"],StatusCodes.BAD_REQUEST)
         return res 
@@ -36,7 +37,26 @@ async function checkAuth(req, res, next) {
     }
 }
 
+async function isAdmin(req, res, next) {
+    try {
+        console.log(req.user);
+        const response = await userService.isAdmin(req.user)
+        console.log(response);
+        if(!response){
+           throw new AppError("you are not an authorized person for this action",StatusCodes.UNAUTHORIZED)
+        }
+        next()
+    } catch (error) {
+        ErrorResponse.message = "something went wrong"
+        ErrorResponse.error =  error.message
+        return res 
+        .status(StatusCodes.BAD_REQUEST)
+        .json(ErrorResponse)
+    }
+}
+
 module.exports = {
     validateAuthrequest,
-    checkAuth
+    checkAuth,
+    isAdmin
 }

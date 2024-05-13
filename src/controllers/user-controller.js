@@ -46,8 +46,28 @@ async function signin(req, res, next){
 }
 
 
+async function addrole(req, res, next){
+    try {
+        const user = await userService.addRoletouser({
+           role:req.body.role,
+           id:req.body.id 
+        })
+     SuccessResponse.data = user;
+      return res
+      .status(StatusCodes.CREATED)
+      .json(SuccessResponse)
+    } catch (error) {
+        ErrorResponse.error = error
+        // console.log(error);
+        return res
+        .status(error.StatusCode)
+        .json(ErrorResponse)
+        
+    }
+}
 
 module.exports = {
     createuser,
-    signin
+    signin,
+    addrole
 }
