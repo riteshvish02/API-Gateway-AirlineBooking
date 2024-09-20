@@ -56,7 +56,7 @@ async function isAuthenticated(token){
             throw new AppError("token not found",StatusCodes.UNAUTHORIZED)
         }
         const response = Auth.verifyjwt(token)
-        console.log(response);
+        // console.log(response);
         
         const user = await usercreateRepo.get(response.id)
         
@@ -107,10 +107,45 @@ async function isAdmin(id){
         throw new AppError('something went wrong', StatusCodes.INTERNAL_SERVER_ERROR)
     }
 }
+
+async function isFlightStaff(id){
+    try {
+        const user = await usercreateRepo.get(id)
+        if(!user){
+            throw new AppError("user not found for the given id ",StatusCodes.NOT_FOUND)
+        }
+        const staffRole = await roleRepo.getRoleByname(FLIGHT_COMPANY)
+        if(!staffRole){
+            throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
+        }
+        user.hasRole(staffRole)
+        return true
+    } catch (error) {
+        console.log(error);
+        if(error instanceof AppError) throw error;
+        throw new AppError('something went wrong', StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+}
+
+async function logOutUser(res){
+    try {
+        
+        res.clearCookie("token")
+        response = { message: 'SignOut successfully' }
+        return response
+    } catch (error) {
+        // console.log(error.name);
+          
+        throw new AppError("something went wrong", StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+
+}
 module.exports = {
     Createuser,
     signin,
     isAuthenticated,
     addRoletouser,
-    isAdmin
+    isAdmin,
+    isFlightStaff,
+    logOutUser
 }

@@ -72,8 +72,27 @@ async function addrole(req, res, next){
     }
 }
 
+async function logOutUser(req, res, next){
+    try {
+        const {message} = await userService.logOutUser(res)
+        SuccessResponse.data = message;
+      return res
+      .status(StatusCodes.OK)
+      .json(SuccessResponse)
+    } catch (error) {
+        ErrorResponse.error = error
+        // console.log(error);
+        return res
+        .status(error.StatusCode)
+        .json(ErrorResponse)
+        
+    }
+}
+
+
 module.exports = {
     createuser,
     signin,
-    addrole
+    addrole,
+    logOutUser
 }

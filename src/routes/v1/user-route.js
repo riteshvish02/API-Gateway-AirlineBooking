@@ -7,7 +7,11 @@ router.post('/signup',
 Authrequestmiddleware.validateAuthrequest,
 userController.createuser
 )
-
+router.get('/logout',
+    Authrequestmiddleware.checkAuth,
+    userController.logOutUser
+    
+)
 router.post('/signin',
 Authrequestmiddleware.validateAuthrequest,
 userController.signin
