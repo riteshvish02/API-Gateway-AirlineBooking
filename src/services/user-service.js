@@ -131,6 +131,28 @@ async function isFlightStaff(id){
     }
 }
 
+// async function isAuth(res){
+//     try {
+//         if(!token){
+//             throw new AppError("token not found",StatusCodes.UNAUTHORIZED)
+//         }
+//         const response = Auth.verifyjwt(token)
+//         // console.log(response);
+        
+//         const user = await usercreateRepo.get(response.id)
+        
+//         if(!user){
+//             throw new AppError("user not found",StatusCodes.NOT_FOUND)
+//         }
+//         return user.dataValues.id
+//     } catch (error) {
+//         if(error instanceof AppError) throw error;
+//         if(error.name === 'jsonWebTokenError'){
+//             throw new AppError("invalid token",StatusCodes.UNAUTHORIZED)
+//         }
+//     }
+// }
+
 async function logOutUser(res){
     try {
         

@@ -47,23 +47,60 @@ async function checkAuth(req, res, next) {
 }
 
 async function isAdmin(req, res, next) {
+
     try {
-        // console.log(req.user);
+        
+      
         const response = await userService.isAdmin(req.user)
         console.log(response);
+        
         if(!response){
            throw new AppError("you are not an authorized person for this action",StatusCodes.UNAUTHORIZED)
         }
         next()
     } catch (error) {
+        console.log("admin waalalala");
+        
         ErrorResponse.message = "something went wrong"
-        ErrorResponse.error =  error.message
+        if(error.message == "Not able to find the resource"){
+            console.log("lllelele");
+            
+            ErrorResponse.error =  new AppError(["you are not an authorized person for this action"],StatusCodes.UNAUTHORIZED)
+        }else{
+          ErrorResponse.error =  error.message
+        }
+       
+        console.log(error.message);
+        
         return res 
         .status(StatusCodes.BAD_REQUEST)
         .json(ErrorResponse)
     }
 }
 
+async function isAuthorize(req, res, next) {
+    
+    try {
+        if (['POST', 'DELETE', 'PATCH'].includes(req.method)) {
+            await isAdmin(req, res, next);
+            next();
+        }
+       else{
+           next()
+       }
+            
+    } catch (error) {
+        
+        ErrorResponse.message = "something went wrong"
+        ErrorResponse.error =  error.message
+        console.log(error);
+        return res 
+        .status(StatusCodes.UNAUTHORIZED)
+        .json(ErrorResponse)
+        // console.log(res.status);
+      
+    }
+}
 
 async function isFlightStaff(req, res, next) {
     try {
@@ -87,5 +124,6 @@ module.exports = {
     validateAuthrequest,
     checkAuth,
     isAdmin,
-    isFlightStaff
+    isFlightStaff,
+    isAuthorize
 }

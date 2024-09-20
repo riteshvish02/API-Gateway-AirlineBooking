@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const {serverconfig,Logger} = require("./config")
-
+const {Authrequestmiddleware} = require("./middlewares")
 //session
 //cookie-parsers
 
@@ -19,7 +19,7 @@ app.use(session({
 
 //proxysetup
 const { createProxyMiddleware } = require('http-proxy-middleware');
-app.use('/flightsService', createProxyMiddleware({ 
+app.use('/flightsService',Authrequestmiddleware.isAuthorize,createProxyMiddleware({ 
     target:serverconfig.FLIGHT_SERVER, 
     changeOrigin: true, 
     pathRewrite: {'^/flightsService' : '/'} 
