@@ -13,7 +13,7 @@ async function Createuser(data){
         const user = await usercreateRepo.create(data) 
         const role = await roleRepo.getRoleByname(CUSTOMER)
         // console.log(role);
-        user.addRole(role)
+        await user.addRole(role)
         return user
     } catch (error) {
         // console.log(error.name);
@@ -82,7 +82,7 @@ async function addRoletouser(data){
         if(!role){  
             throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
         }
-        user.addRole(role)
+        await user.addRole(role)
         return user
     } catch (error) {
         if(error instanceof AppError) throw error;
@@ -92,15 +92,19 @@ async function addRoletouser(data){
 async function isAdmin(id){
     try {
         const user = await usercreateRepo.get(id)
+        console.log(user);
+        
         if(!user){
             throw new AppError("user not found for the given id ",StatusCodes.NOT_FOUND)
         }
         const adminrole = await roleRepo.getRoleByname(ADMIN)
+        console.log(adminrole);
+        
         if(!adminrole){
             throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
         }
-        user.hasRole(adminrole)
-        return true
+       const Bool =  await user.hasRole(adminrole)
+        return Bool
     } catch (error) {
         console.log(error);
         if(error instanceof AppError) throw error;
@@ -118,7 +122,7 @@ async function isFlightStaff(id){
         if(!staffRole){
             throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
         }
-        user.hasRole(staffRole)
+        await user.hasRole(staffRole)
         return true
     } catch (error) {
         console.log(error);

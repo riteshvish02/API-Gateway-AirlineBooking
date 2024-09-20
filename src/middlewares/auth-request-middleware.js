@@ -25,11 +25,13 @@ function validateAuthrequest(req, res, next) {
 async function checkAuth(req, res, next) {
     try {
         const {token} = req.cookies
-        console.log(token);
+        // console.log(token);
         if(!token){
             throw new AppError("please login first to access the resource",StatusCodes.BAD_REQUEST)
         }
         const response = await userService.isAuthenticated(token)
+        console.log(response);
+        
         if(response){
             req.user = response 
             next() //setting user id in the request object
@@ -48,7 +50,7 @@ async function isAdmin(req, res, next) {
     try {
         // console.log(req.user);
         const response = await userService.isAdmin(req.user)
-        // console.log(response);
+        console.log(response);
         if(!response){
            throw new AppError("you are not an authorized person for this action",StatusCodes.UNAUTHORIZED)
         }
