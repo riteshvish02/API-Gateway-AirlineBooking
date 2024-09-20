@@ -22,7 +22,12 @@ function validateAuthrequest(req, res, next) {
 
 async function checkAuth(req, res, next) {
     try {
-        const response = await userService.isAuthenticated(req.headers['x-access-token'])
+        const {token} = req.cookies
+        console.log(token);
+        if(!token){
+            throw new AppError("jwt is not found in the incoming request",StatusCodes.BAD_REQUEST)
+        }
+        const response = await userService.isAuthenticated(token)
         if(response){
             req.user = response 
             next() //setting user id in the request object

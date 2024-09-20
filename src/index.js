@@ -1,6 +1,21 @@
 const express = require('express');
 const app = express();
 const {serverconfig,Logger} = require("./config")
+
+//session
+
+const session = require('express-session');
+app.use(session({
+    secret:serverconfig.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+}));
+
+//cookie-parsers
+
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 //proxysetup
 const { createProxyMiddleware } = require('http-proxy-middleware');
 app.use('/flightsService', createProxyMiddleware({ 

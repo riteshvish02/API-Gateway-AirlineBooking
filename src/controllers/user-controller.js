@@ -1,7 +1,7 @@
 const {StatusCodes} = require("http-status-codes")
 
 const {userService} = require('../services')
-
+const {serverconfig} =  require("../config")
 const {ErrorResponse,SuccessResponse} = require("../utils/common");
 const { sign } = require("jsonwebtoken");
 
@@ -31,9 +31,15 @@ async function signin(req, res, next){
            email:req.body.email,
            password:req.body.password   
         })
+
      SuccessResponse.data = token;
+     const options = {
+        expires:serverconfig.COOKIE_EXPIRE,
+        httpOnly: true,
+     }    
       return res
       .status(StatusCodes.CREATED)
+      .cookie("token",token,options)
       .json(SuccessResponse)
     } catch (error) {
         ErrorResponse.error = error

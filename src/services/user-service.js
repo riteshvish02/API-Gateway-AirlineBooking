@@ -43,6 +43,7 @@ async function signin(data) {
     }
 
     const jwt = Auth.createToken({id:user.id,email:user.email})
+    
     return jwt
   } catch (error) {
     if(error instanceof AppError) throw error;
@@ -56,7 +57,11 @@ async function isAuthenticated(token){
             throw new AppError("token not found",StatusCodes.UNAUTHORIZED)
         }
         const response = Auth.verifyjwt(token)
+        console.log(response);
+        
         const user = await usercreateRepo.get(response.id)
+        console.log(user);
+        
         if(!user){
             throw new AppError("user not found",StatusCodes.NOT_FOUND)
         }
@@ -76,7 +81,7 @@ async function addRoletouser(data){
             throw new AppError("user not found for the given id ",StatusCodes.NOT_FOUND)
         }
         const role = await roleRepo.getRoleByname(data.role)
-        if(!role){
+        if(!role){  
             throw new AppError("role not found for the given name ",StatusCodes.NOT_FOUND)
         }
         user.addRole(role)
