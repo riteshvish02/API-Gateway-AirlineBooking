@@ -3,6 +3,10 @@ const app = express();
 const {serverconfig,Logger} = require("./config")
 
 //session
+//cookie-parsers
+
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 const session = require('express-session');
 app.use(session({
@@ -12,10 +16,7 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-//cookie-parsers
 
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
 //proxysetup
 const { createProxyMiddleware } = require('http-proxy-middleware');
 app.use('/flightsService', createProxyMiddleware({ 
@@ -24,7 +25,7 @@ app.use('/flightsService', createProxyMiddleware({
     pathRewrite: {'^/flightsService' : '/'} 
 }));
 
-app.use('/bookingsService', createProxyMiddleware({ 
+app.use('/bookingsService',createProxyMiddleware({ 
     target:serverconfig.BOOKING_SERVER, 
     changeOrigin: true, 
     pathRewrite: {'^/bookingsService' : '/'} 

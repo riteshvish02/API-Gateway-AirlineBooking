@@ -43,7 +43,6 @@ async function signin(data) {
     }
 
     const jwt = Auth.createToken({id:user.id,email:user.email})
-    
     return jwt
   } catch (error) {
     if(error instanceof AppError) throw error;
@@ -60,12 +59,11 @@ async function isAuthenticated(token){
         console.log(response);
         
         const user = await usercreateRepo.get(response.id)
-        console.log(user);
         
         if(!user){
             throw new AppError("user not found",StatusCodes.NOT_FOUND)
         }
-        return user.id
+        return user.dataValues.id
     } catch (error) {
         if(error instanceof AppError) throw error;
         if(error.name === 'jsonWebTokenError'){

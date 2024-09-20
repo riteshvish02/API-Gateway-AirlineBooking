@@ -3,10 +3,12 @@ const {StatusCodes} = require("http-status-codes")
 const {userService} = require('../services')
 const {serverconfig} =  require("../config")
 const {ErrorResponse,SuccessResponse} = require("../utils/common");
-const { sign } = require("jsonwebtoken");
+// const { sign } = require("jsonwebtoken");
 
 async function createuser(req, res, next){
     try {
+        console.log(req.body);
+        
         const user = await userService.Createuser({
            email:req.body.email,
            password:req.body.password
@@ -31,21 +33,19 @@ async function signin(req, res, next){
            email:req.body.email,
            password:req.body.password   
         })
+        console.log("token",token);
+        
 
      SuccessResponse.data = token;
      const options = {
-        expires:serverconfig.COOKIE_EXPIRE,
         httpOnly: true,
      }    
-      return res
-      .status(StatusCodes.CREATED)
-      .cookie("token",token,options)
-      .json(SuccessResponse)
+     
+      return res.status(StatusCodes.CREATED).cookie("token",token,options).json(SuccessResponse)
     } catch (error) {
         ErrorResponse.error = error
-        // console.log(error);
         return res
-        .status(error.StatusCode)
+        .status(500)
         .json(ErrorResponse)
         
     }

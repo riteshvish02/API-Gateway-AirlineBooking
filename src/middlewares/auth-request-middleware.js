@@ -3,6 +3,8 @@ const {userService} = require('../services')
 const {ErrorResponse} = require("../utils/common")
 const AppError = require("../utils/errors/app-error")
 function validateAuthrequest(req, res, next) {
+    console.log(req.body);
+    
     if(!req.body.password){
         ErrorResponse.message = "something went wrong while signing"
         ErrorResponse.error =  new AppError(["password  is not found in the incoming request"],StatusCodes.BAD_REQUEST)
@@ -25,7 +27,7 @@ async function checkAuth(req, res, next) {
         const {token} = req.cookies
         console.log(token);
         if(!token){
-            throw new AppError("jwt is not found in the incoming request",StatusCodes.BAD_REQUEST)
+            throw new AppError("please login first to access the resource",StatusCodes.BAD_REQUEST)
         }
         const response = await userService.isAuthenticated(token)
         if(response){
