@@ -1,4 +1,4 @@
-const CrudRepository = require("./crud-repo")
+  const CrudRepository = require("./crud-repo")
 const {user} = require("../models");
 const { where } = require("sequelize");
 

@@ -26,7 +26,7 @@ app.use('/flightsService',Authrequestmiddleware.isAuthorize,createProxyMiddlewar
 }));
 
 app.use('/bookingsService',createProxyMiddleware({ 
-    target:serverconfig.BOOKING_SERVER, 
+    target:serverconfig.BOOKING_SERVER || 'http://booking-service:4000', 
     changeOrigin: true, 
     pathRewrite: {'^/bookingsService' : '/'} 
 }));
@@ -45,6 +45,9 @@ const apiroutes = require("./routes")
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use("/api",apiroutes)
+app.use("/check",async (req,res)=>{
+    res.status(200).send("ok")
+})
 app.listen(serverconfig.PORT,()=>{
     console.log(`server listening on ${serverconfig.PORT}`);
     Logger.info(`server listening on ${serverconfig.PORT}`,"root",{})

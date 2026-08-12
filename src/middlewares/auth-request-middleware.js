@@ -24,7 +24,7 @@ function validateAuthrequest(req, res, next) {
 
 async function checkAuth(req, res, next) {
     try {
-        const {token} = req.cookies
+        const {token} = req.cookies || req.headers.authorization;
         // console.log(token);
         if(!token){
             throw new AppError("please login first to access the resource",StatusCodes.BAD_REQUEST)
